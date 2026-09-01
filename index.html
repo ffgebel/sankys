@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SANKO Üniversitesi Kalite Yönetim Sistemi</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">SK</div>
+        <div><strong>SANKO Üniversitesi</strong><span>Kalite Yönetim Sistemi</span></div>
+      </div>
+      <nav id="nav">
+        <button class="nav-item active" data-view="dashboard">⌂ Dashboard</button>
+        <button class="nav-item" data-view="new-record">＋ Yeni Kayıt</button>
+        <button class="nav-item" data-view="feedback">◉ Geri Bildirimler</button>
+        <button class="nav-item" data-view="surveys">▦ Anket Yönetimi</button>
+        <button class="nav-item" data-view="insights">✦ Akıllı Öneriler</button>
+        <button class="nav-item" data-view="observations">◌ Gözlemler</button>
+        <button class="nav-item" data-view="df">⚠ DF / İyileştirme Kaydı</button>
+        <button class="nav-item" data-view="actions">✓ Faaliyet / Aksiyonlar</button>
+        <button class="nav-item" data-view="puko">↻ PUKÖ</button>
+        <button class="nav-item" data-view="resources">▤ Kaynak Talepleri</button>
+        <button class="nav-item" data-view="physical">⌂ Fiziksel İyileştirme</button>
+        <button class="nav-item" data-view="evidence">▣ Kanıt Dizini</button>
+        <button class="nav-item" data-view="risks">⚑ Risk ve Fırsatlar</button>
+        <button class="nav-item" data-view="previous">⌁ 2025 Tetkik Bulguları</button>
+        <button class="nav-item" data-view="audit">☑ Tetkik Hazırlık</button>
+        <button class="nav-item" data-view="reports">▣ Rapor Merkezi</button>
+      </nav>
+      <div class="sidebar-foot">
+        <button id="exportJson" class="ghost-btn">Veriyi Yedekle</button>
+        <button id="resetDemoData" class="ghost-btn danger-soft">Demo Verilerini Sıfırla</button>
+        <label class="ghost-btn file-label">Yedek Yükle<input id="importJson" type="file" accept="application/json" hidden></label>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSubtitle">Kütüphane kalite ve iyileştirme süreçlerinin canlı görünümü</p>
+        </div>
+        <div class="top-actions">
+          <div class="theme-controls" title="Görünüm ve vurgu rengini değiştir">
+            <button id="themeToggle" class="theme-toggle" type="button">☾ Gece</button>
+            <div class="accent-picker" aria-label="Tema rengi">
+              <button type="button" class="accent-dot active" data-accent="blue" title="Kurumsal Mavi"></button>
+              <button type="button" class="accent-dot" data-accent="teal" title="Turkuaz"></button>
+              <button type="button" class="accent-dot" data-accent="green" title="Yeşil"></button>
+              <button type="button" class="accent-dot" data-accent="purple" title="Mor"></button>
+            </div>
+          </div>
+          <span class="badge">01.09.2026 Tetkik Sunum Sürümü</span>
+          <button class="primary-btn" data-open-record>+ Kayıt Ekle</button>
+        </div>
+      </header>
+
+      <section id="view-dashboard" class="view active">
+        <div class="hero-card">
+          <div>
+            <span class="eyebrow">KALİTE PANO</span>
+            <h2>Denetime hazır, izlenebilir ve kanıta dayalı kütüphane yönetimi.</h2>
+            <p>Geri bildirim → aksiyon → PUKÖ → kanıt → rapor zincirini tek yerden yönetin.</p>
+          </div>
+          <div class="audit-score"><span id="auditScore">0%</span><small>Tetkik Hazırlık</small></div>
+        </div>
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><h3>Aksiyon Durumu</h3><span>Canlı</span></div><div id="actionChart" class="bar-chart"></div></div>
+          <div class="panel"><div class="panel-head"><h3>Konu Bazlı Geri Bildirim</h3><span>Dağılım</span></div><div id="topicChart" class="bar-chart"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><h3>Son İyileştirmeler</h3><button class="link-btn" data-view-jump="physical">Tümünü Gör</button></div><div id="recentPhysical"></div></div>
+          <div class="panel"><div class="panel-head"><h3>Yaklaşan / Geçen Terminler</h3><button class="link-btn" data-view-jump="actions">Aksiyonlara Git</button></div><div id="deadlineList"></div></div>
+        </div>
+      </section>
+
+      <section id="view-new-record" class="view">
+        <div class="panel record-panel">
+          <div class="record-tabs" id="recordTabs">
+            <button class="tab active" data-form="feedback">Geri Bildirim</button>
+            <button class="tab" data-form="observation">Gözlem</button>
+            <button class="tab" data-form="df">DF / Eksiklik</button>
+            <button class="tab" data-form="action">Faaliyet / Aksiyon</button>
+            <button class="tab" data-form="puko">PUKÖ</button>
+            <button class="tab" data-form="resource">Kaynak Talebi</button>
+            <button class="tab" data-form="physical">Fiziksel İyileştirme</button>
+            <button class="tab" data-form="evidence">Kanıt</button>
+          </div>
+          <div id="formHost"></div>
+        </div>
+      </section>
+
+      <section id="view-feedback" class="view"><div class="panel"><div class="panel-head"><h3>Geri Bildirim Kayıtları</h3><button class="primary-btn" data-open-form="feedback">+ Yeni</button></div><div id="feedbackTable"></div></div></section>
+      <section id="view-observations" class="view">
+        <div class="hero-card"><div><span class="eyebrow">TETKİK GÖZLEMLERİ</span><h2>DF gerektirmeyen geliştirme alanlarını izleyin.</h2><p>Kritik uygunsuzluk niteliği taşımayan hususlar gözlem olarak kaydedilir; takip tarihi, bağlantılı faaliyet ve kapanış durumu izlenir.</p></div></div>
+        <div class="panel"><div class="panel-head"><div><h3>Gözlem Kayıtları</h3><span>Yeni dönem tetkik değerlendirmeleri</span></div><button class="primary-btn" data-open-form="observation">+ Yeni Gözlem</button></div><div id="observationTable"></div></div>
+      </section>
+      <section id="view-df" class="view"><div class="panel"><div class="panel-head"><div><h3>Düzeltici Faaliyet / İyileştirme Kayıtları</h3><span>Yalnız kritik/açık uygunsuzluklarda kullanılır</span></div><button class="primary-btn" data-open-form="df">+ Yeni DF</button></div><div id="dfTable"></div></div></section>
+      <section id="view-actions" class="view"><div class="panel"><div class="panel-head"><h3>Aksiyon Takibi</h3><button class="primary-btn" data-open-form="action">+ Yeni</button></div><div id="actionsTable"></div></div></section>
+      <section id="view-puko" class="view"><div class="panel"><div class="panel-head"><h3>PUKÖ Takibi</h3><button class="primary-btn" data-open-form="puko">+ Yeni</button></div><div id="pukoTable"></div></div></section>
+      <section id="view-resources" class="view"><div class="panel"><div class="panel-head"><h3>Kaynak Talepleri</h3><button class="primary-btn" data-open-form="resource">+ Yeni</button></div><div id="resourcesTable"></div></div></section>
+      <section id="view-physical" class="view"><div class="panel"><div class="panel-head"><h3>Fiziksel İyileştirmeler</h3><button class="primary-btn" data-open-form="physical">+ Yeni</button></div><div id="physicalTable"></div></div></section>
+      <section id="view-evidence" class="view"><div class="panel"><div class="panel-head"><h3>Kanıt Dizini</h3><button class="primary-btn" data-open-form="evidence">+ Kanıt Ekle</button></div><div id="evidenceTable"></div></div></section>
+
+      <section id="view-surveys" class="view">
+        <div class="grid-2 survey-layout">
+          <div class="panel">
+            <div class="panel-head"><div><h3>Anket Sonucu Girişi</h3><span>Memnuniyet verisini kalite kaydına dönüştürün</span></div></div>
+            <form id="surveyForm">
+              <input type="hidden" name="editId">
+              <div class="form-grid">
+                <label>Tarih<input type="date" name="date" required></label>
+                <label>Anket Türü<select name="type"><option>Genel Memnuniyet Anketi</option><option>Hizmet Değerlendirme Anketi</option><option>Eğitim Değerlendirme Anketi</option><option>Diğer</option></select></label>
+                <label class="span-2">Anket Adı<input name="title" required placeholder="Örn. 2026 Kütüphane Kullanıcı Memnuniyet Anketi"></label>
+                <label>Kalite Doküman No<input name="documentNo" placeholder="Örn. FR.KÜT.01"></label>
+                <label>Katılımcı Sayısı<input name="respondents" type="number" min="0" placeholder="0"></label>
+                <label>Fiziksel Ortam (1–5)<input name="physicalScore" type="number" min="1" max="5" step="0.1"></label>
+                <label>Basılı Kaynaklar (1–5)<input name="collectionScore" type="number" min="1" max="5" step="0.1"></label>
+                <label>Elektronik Kaynaklar (1–5)<input name="electronicScore" type="number" min="1" max="5" step="0.1"></label>
+                <label>Personel Hizmeti (1–5)<input name="staffScore" type="number" min="1" max="5" step="0.1"></label>
+                <label>Sessizlik / Çalışma Ortamı (1–5)<input name="quietScore" type="number" min="1" max="5" step="0.1"></label>
+                <label>Uzaktan Erişim (1–5)<input name="remoteScore" type="number" min="1" max="5" step="0.1"></label>
+                <label class="span-2">Öne Çıkan Olumlu Görüşler<textarea name="strengths" placeholder="Kullanıcıların özellikle memnun olduğu noktalar"></textarea></label>
+                <label class="span-2">Sorunlar / Açık Uçlu Görüş Özeti<textarea name="issues" placeholder="Tekrar eden şikâyetler, öneriler, dikkat çeken ifadeler"></textarea></label>
+                <label class="span-2">Değerlendirme Notu<textarea name="evaluation" placeholder="İsterseniz manuel değerlendirme ekleyin; sistem ayrıca otomatik yorum üretir."></textarea></label>
+              </div>
+              <div class="form-actions"><button class="primary-btn">Anket Sonucunu Kaydet</button><button type="button" class="secondary-btn" id="cancelSurveyEdit" hidden>Vazgeç</button></div>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><h3>Otomatik Anket Değerlendirmesi</h3><span>Girilen sonuca göre canlı yorum</span></div></div>
+            <div id="surveyLiveEvaluation" class="smart-eval"></div>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-head"><h3>Anket Kayıtları</h3><span id="surveyCountBadge"></span></div><div id="surveyTable"></div></div>
+      </section>
+
+      <section id="view-insights" class="view">
+        <div class="hero-card insight-hero"><div><span class="eyebrow">AKILLI ÖNERİ MOTORU</span><h2>Kayıtlardan iyileştirme fırsatlarını yakala.</h2><p>Anket puanları, tekrar eden geri bildirimler, açık DF'ler ve faaliyet durumları birlikte değerlendirilir.</p></div><div class="ai-badge">✦<small>Yerel Analiz</small></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Öneriler</h3><span>Kurallı analiz • internet gerektirmez</span></div><button id="refreshInsights" class="primary-btn">Analizi Yenile</button></div>
+          <div id="insightSummary" class="insight-summary"></div>
+          <div id="insightCards" class="insight-grid"></div>
+        </div>
+        <div class="panel info-panel"><strong>Bu sürüm nasıl “akıllı” çalışıyor?</strong><p>Bu prototip gerçek bir dil modeli çağırmıyor. Verileriniz tarayıcıdan çıkmadan eşik, tekrar ve ilişki kurallarına göre öneri üretir. İleride kurumsal onayla OpenAI/Azure OpenAI gibi bir servis bağlanırsa serbest metinleri de anlamsal olarak yorumlayıp daha ayrıntılı PUKÖ taslakları oluşturabilir.</p></div>
+      </section>
+
+      <section id="view-risks" class="view"><div class="panel"><div class="panel-head"><div><h3>Risk ve Fırsatlar</h3><span>Kütüphane hizmetlerine özgü yazılı risk kaydı</span></div></div><div id="riskTable"></div></div></section>
+
+      <section id="view-previous" class="view">
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><h3>Önceki Tetkik • Güçlü Yönler</h3><span>Geçen tetkik</span></div><div id="strengthsList"></div></div>
+          <div class="panel"><div class="panel-head"><h3>Önceki Tetkik • Gelişime Açık / Öneriler</h3><span>İzleme durumu</span></div><div id="previousFindings"></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><h3>Öneriden İyileştirmeye İzlenebilirlik</h3><span>DF → Aksiyon → PUKÖ → Kanıt</span></div><div id="traceability"></div></div>
+      </section>
+
+      <section id="view-audit" class="view">
+        <div class="grid-2 audit-layout">
+          <div class="panel"><div class="panel-head"><h3>Tetkik Hazırlık Kontrolü</h3><span id="auditBadge" class="badge"></span></div><div id="auditChecklist"></div></div>
+          <div class="panel"><div class="panel-head"><h3>Eksik Belge / Veri Rehberi</h3></div><div id="auditGuide" class="guide"></div></div>
+        </div>
+        <div class="panel audit-manager-panel">
+          <div class="panel-head">
+            <div><h3>Kontrol Maddeleri Yönetimi</h3><p class="panel-sub">Tetkik hazırlık başlıklarını ekleyin, düzenleyin veya pasife alın. DF kayıtları bu maddelere bağlanabilir.</p></div>
+            <button id="prepareDemo" class="secondary-btn" type="button">Yeni Kontrol Maddesi Ekle</button>
+          </div>
+          <form id="auditItemForm" class="audit-editor">
+            <input type="hidden" name="editKey">
+            <label>Kontrol Maddesi<input name="name" required placeholder="Örn. Son memnuniyet anketi raporu onaylandı mı?"></label>
+            <label>Otomatik Kontrol Kuralı
+              <select name="rule">
+                <option value="linked">Bağlı DF / faaliyet tamamlanınca</option>
+                <option value="survey">Memnuniyet anketi kaydı varsa</option>
+                <option value="surveyPuko">Memnuniyet anketinden PUKÖ varsa</option>
+                <option value="noOpenActions">Açık aksiyon kalmadıysa</option>
+                <option value="noOverdue">Termin geçmiş aksiyon yoksa</option>
+                <option value="pukoComplete">PUKÖ alanları tamamlandıysa</option>
+              </select>
+            </label>
+            <label>Eksikse Gösterilecek Rehber<input name="hint" placeholder="Kullanıcıya ne yapması gerektiğini söyleyin."></label>
+            <label>Durum<select name="active"><option value="true">Aktif</option><option value="false">Pasif</option></select></label>
+            <div class="audit-editor-actions"><button class="primary-btn" type="submit">Kontrol Maddesini Kaydet</button><button id="cancelAuditEdit" class="secondary-btn" type="button">Temizle</button></div>
+          </form>
+          <div id="auditManagerTable"></div>
+        </div>
+      </section>
+
+      <section id="view-reports" class="view">
+        <div class="grid-2 report-layout">
+          <div class="panel">
+            <div class="panel-head"><h3>Rapor Oluştur</h3><span>Otomatik</span></div>
+            <div class="form-grid">
+              <label>Rapor Türü<select id="reportType"><option value="management">Yönetim / Kalite Özeti</option><option value="audit">İç Tetkik Hazırlık Raporu</option><option value="actions">Aksiyon Durum Raporu</option><option value="puko">PUKÖ İyileştirme Raporu</option><option value="survey">Anket Değerlendirme Raporu</option><option value="previous">Önceki Tetkik İzleme Raporu</option><option value="auditor2026">Tetkikçi Değerlendirme Raporu</option></select></label>
+              <label>Başlangıç Tarihi<input id="reportStart" type="date"></label>
+              <label>Bitiş Tarihi<input id="reportEnd" type="date"></label>
+              <label>Hazırlayan<input id="reportAuthor" value="SANKO Üniversitesi"></label>
+            </div>
+            <div class="report-actions"><button id="generateReport" class="primary-btn">Raporu Oluştur</button><button id="printReport" class="secondary-btn">PDF / Yazdır</button></div>
+          </div>
+          <div class="panel report-preview-wrap"><div class="panel-head"><h3>Rapor Önizleme</h3></div><article id="reportPreview" class="report-preview"><div class="empty-state">Rapor türünü seçip “Raporu Oluştur” düğmesine basın.</div></article></div>
+        </div>
+      </section>
+      <footer class="app-footer">
+        <div><strong>SANKO Üniversitesi Kalite Yönetim Sistemi</strong></div>
+        <div><strong>SANKO Üniversitesi</strong> · Kalite Yönetim Sistemi</div>
+        <small>Genel kullanım sürümü · Kalite süreçleri, PUKÖ, gözlem, DF, kanıt ve tetkik raporlama sistemi.</small>
+      </footer>
+    </main>
+  </div>
+
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-card delete-card">
+      <div class="modal-head"><h3>Kayıt Silme Doğrulaması</h3><button class="mini-btn ghost" data-close-delete>✕</button></div>
+      <div class="delete-warning">
+        <div class="delete-icon">!</div>
+        <div><strong id="deletePromptTitle">Bu kayıt silinecek.</strong><p id="deletePromptText">Bu işlem geri alınamaz. Bağlı alanlardaki referanslar da temizlenecektir.</p></div>
+      </div>
+      <div id="deleteLinkedAuditOption" class="delete-linked-option" hidden>
+        <label><input id="deleteLinkedAuditCheck" type="checkbox" checked> <span>Bu DF’ye bağlı <strong>Tetkik Hazırlık kontrol maddesini de sil</strong></span></label>
+        <small id="deleteLinkedAuditName"></small>
+      </div>
+      <label class="delete-confirm-label">Doğrulamak için kayıt numarasını yazın<input id="deleteConfirmInput" autocomplete="off" placeholder="Örn. DF-2026-001"></label>
+      <div class="modal-actions"><button class="secondary-btn" type="button" data-close-delete>Vazgeç</button><button id="confirmDeleteBtn" class="danger-btn" type="button" disabled>Kalıcı Olarak Sil</button></div>
+    </div>
+  </div>
+
+  <div id="historyModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-head"><h3 id="historyTitle">Revizyon Geçmişi</h3><button class="mini-btn ghost" data-close-history>✕</button></div>
+      <div id="historyBody" class="history-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="app-part-1.js"></script>
+<script src="app-part-2.js"></script>
+<script src="app-part-3.js"></script>
+<script src="app-part-4.js"></script>
+<script src="app-part-5.js"></script>
+<script src="app-part-6.js"></script>
+<script src="app-part-7.js"></script>
+</body>
+</html>
